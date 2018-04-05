@@ -39,10 +39,16 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
 PROJECT( Assimp )
 
 # All supported options ###############################################
-OPTION( BUILD_SHARED_LIBS
-  "Build package with shared libraries."
-  ON
-)
+
+OPTION(BUILD_SHARED_LIBS "Build package with shared libraries." OFF)
+SET(BUILD_SHARED_LIBS OFF)
+IF(NOT BUILD_SHARED_LIBS)
+  message("---------- Static Assimp")
+  SET(LINK_SEARCH_START_STATIC TRUE)
+else()
+  message("---------- Dynamic Assimp")
+ENDIF(NOT BUILD_SHARED_LIBS)
+
 OPTION( BUILD_FRAMEWORK
   "Build package as Mac OS X Framework bundle."
   OFF
@@ -69,7 +75,7 @@ OPTION( ASSIMP_BUILD_ZLIB
 )
 OPTION( ASSIMP_BUILD_ASSIMP_TOOLS
   "If the supplementary tools for Assimp are built in addition to the library."
-  ON
+  OFF
 )
 OPTION ( ASSIMP_BUILD_SAMPLES
   "If the official samples are built as well (needs Glut)."
@@ -77,7 +83,7 @@ OPTION ( ASSIMP_BUILD_SAMPLES
 )
 OPTION ( ASSIMP_BUILD_TESTS
   "If the test suite for Assimp is built in addition to the library."
-  ON
+  OFF
 )
 OPTION ( ASSIMP_COVERALLS
   "Enable this to measure test coverage."
@@ -173,8 +179,18 @@ CONFIGURE_FILE(
 )
 
 CONFIGURE_FILE(
+  ${CMAKE_CURRENT_LIST_DIR}/revision.h.in
+  ${CMAKE_CURRENT_LIST_DIR}/revision.h
+)
+
+CONFIGURE_FILE(
   ${CMAKE_CURRENT_LIST_DIR}/include/assimp/config.h.in
   ${CMAKE_CURRENT_BINARY_DIR}/include/assimp/config.h
+)
+
+CONFIGURE_FILE(
+  ${CMAKE_CURRENT_LIST_DIR}/include/assimp/config.h.in
+  ${CMAKE_CURRENT_LIST_DIR}/include/assimp/config.h
 )
 
 INCLUDE_DIRECTORIES(
@@ -284,8 +300,8 @@ ENDIF()
 # Only generate this target if no higher-level project already has
 IF (NOT TARGET uninstall)
   # add make uninstall capability
-  CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/cmake_uninstall.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" IMMEDIATE @ONLY)
-  ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+  # CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules/cmake_uninstall.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" IMMEDIATE @ONLY)
+  # ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 ENDIF()
 
 # cmake configuration files
