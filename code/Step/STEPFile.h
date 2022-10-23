@@ -321,7 +321,7 @@ namespace STEP {
             }
 
             ENTITY()
-                : PrimitiveDataType<uint64_t>(TypeError::ENTITY_NOT_SPECIFIED)
+                : PrimitiveDataType<uint64_t>(uint64_t(TypeError::ENTITY_NOT_SPECIFIED))
             {
             }
 
@@ -365,7 +365,7 @@ namespace STEP {
             }
 
             BINARY()
-            : PrimitiveDataType<uint32_t>(TypeError::ENTITY_NOT_SPECIFIED_32) {
+            : PrimitiveDataType<uint32_t>(uint32_t(TypeError::ENTITY_NOT_SPECIFIED_32)) {
                 // empty
             }
         };
