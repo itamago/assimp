@@ -468,6 +468,22 @@ ENDIF()
 
 # Search for external dependencies, and build them from source if not found
 # Search for zlib
+
+# ==== PDA : using single external location for ZLIB
+if (TARGET ZLIB::ZLIB)
+
+    message("==== ASSIMP using ZLIB from external location (PDA)")
+    # message("ZLIB_FOUND       = ${ZLIB_FOUND}")
+    # message("ZLIB_LIBRARIES   = ${ZLIB_LIBRARIES}")
+    # message("ZLIB_INCLUDE_DIR = ${ZLIB_INCLUDE_DIR}")
+    # message("======================================== ASSIMP ZLIB")
+
+    add_definitions(-DASSIMP_BUILD_NO_OWN_ZLIB)
+    set(ZLIB_LIBRARIES ZLIB::ZLIB)
+    set(ASSIMP_BUILD_MINIZIP FALSE)
+
+else()
+
 IF(ASSIMP_HUNTER_ENABLED)
   hunter_add_package(ZLIB)
   find_package(ZLIB CONFIG REQUIRED)
@@ -514,6 +530,10 @@ ELSE()
   ENDIF()
   INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
 ENDIF()
+
+
+endif() # === PDA
+
 
 IF( NOT IOS )
   IF( NOT ASSIMP_BUILD_MINIZIP )
